@@ -19,17 +19,15 @@
           <td><%= @book.body %></td>
           <td>
             <% if @book.favorited_by?(current_user) %>
-            <p>
               <%= link_to book_favorites_path(@book), method: :delete do %>
-                ♥<%= @book.favorites.count %>
+                <i class="fas fa-heart" aria-hidden="true" style="color: red;"></i>
+                <%= @book.favorites.count %>
               <% end %>
-            </p>
             <% else %>
-            <p>
               <%= link_to book_favorites_path(@book), method: :post do %>
-                ♡<%= @book.favorites.count %>
+                <i class="fas fa-heart" aria-hidden="true"></i>
+                <%= @book.favorites.count %>
               <% end %>
-            </p>
             <% end %>
           </td>
           <td>
@@ -45,23 +43,24 @@
         <% @book.book_comments.each do |book_comment| %>
         <tr>
           <td>
-            <%= image_tag book_comment.user.get_profile_image, size:"100x100" %><br>
-            <%= book_comment.user.name %>
+            <%= link_to user_path(book_comment.user) do %>
+              <%= image_tag book_comment.user.get_profile_image, size:"100x100" %><br>
+              <%= book_comment.user.name %>
+            <% end %>
           </td>
           <td><%= book_comment.comment %></td>
-
-          <% if book_comment.user == current_user %>
           <td>
-            <%= link_to "Destroy", book_book_comments_path(book_comment.book, book_comment), method: :delete %>
+            <% if book_comment.user == current_user %>
+              <%= link_to "Destroy", book_book_comments_path(@book, book_comment), method: :delete, class: "btn btn-danger pull-right" %>
+            <% end %>
           </td>
-          <% end %>
         </tr>
         <% end %>
       </table>
       <div>
         <%= form_with model: [@book, @book_comment] do |f| %>
-          <%= f.text_area :comment, rows: '5', placeholder: "コメントをここに" %>
-          <%= f.submit "送信する" %>
+          <%= f.text_area :comment, rows: '5', placeholder: "コメントをここに", class: "w-100" %>
+          <%= f.submit "送信する", class: "btn btn-lg btn-base-1 mt-20 pull-right" %>
         <% end %>
       </div>
     </div>
